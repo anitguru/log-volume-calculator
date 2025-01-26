@@ -46,3 +46,41 @@ All commands are run from the root of the project, from a terminal:
 ## 👀 Want to learn more?
 
 Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+
+--
+
+my-astro-project/
+├─ public/
+│ └─ (static assets: images, etc.)
+├─ src/
+│ ├─ components/
+│ │ └─ SomeComponent.astro
+│ ├─ layouts/
+│ │ └─ BaseLayout.astro
+│ ├─ pages/
+│ │ └─ index.astro
+│ └─ styles/
+│ └─ global.css
+├─ astro.config.mjs
+├─ tailwind.config.cjs
+├─ postcss.config.cjs
+├─ tsconfig.json
+└─ package.json
+
+├── public/
+| └── (static assets, e.g., images, icons)
+├── src/
+| ├── components/
+| | ├── Form.astro
+| | └── Results.astro
+| ├── layouts/
+| | └── BaseLayout.astro
+| ├── pages/
+| | ├── index.astro
+| | ├── about.astro
+| | └── ...
+| └── utils/
+| └── calculations.ts
+├── astro.config.mjs
+├── package.json
+└── tsconfig.json
