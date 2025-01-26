@@ -1,5 +1,15 @@
-// @ts-check
-import { defineConfig } from 'astro/config';
+// astro.config.mjs
+import { defineConfig } from "astro/config";
+import tailwind from "@astrojs/tailwind";
 
-// https://astro.build/config
-export default defineConfig({});
+export default defineConfig({
+  integrations: [
+    tailwind({
+      // Example: apply Tailwind in both development and production
+      config: {
+        applyBaseStyles: true,
+      },
+    }),
+  ],
+  // ...any other Astro config
+});
