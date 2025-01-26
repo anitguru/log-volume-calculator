@@ -1,0 +1,116 @@
+---
+import { initialCategories } from '../data/categories';
+import type { Device } from '../types/Device';
+
+// 1. Grab the "infrastructure" category
+const infrastructure = initialCategories.find((cat) => cat.id === 'infrastructure');
+if (!infrastructure) {
+  throw new Error('No Infrastructure category found.');
+}
+
+// 2. We'll clone the device array so we can store state in the browser
+//   (If you’re OK mutating directly, that’s fine, too.)
+const devicesJSON = JSON.stringify(infrastructure.devices);
+---
+
+<section class="border p-4 rounded">
+  <h2 class="text-xl font-semibold flex items-center justify-between">
+    Infrastructure
+    <!-- You could implement a toggle arrow or details/summary for collapsible behavior -->
+  </h2>
+
+  <table class="min-w-full mt-4">
+    <thead class="bg-gray-200">
+      <tr>
+        <th class="text-left py-2 px-3">Device Type</th>
+        <th class="text-left py-2 px-3">Quantity</th>
+        <th class="text-left py-2 px-3">EPS</th>
+        <th class="text-left py-2 px-3">GB/day</th>
+      </tr>
+    </thead>
+    <tbody id="infraTbody"></tbody>
+  </table>
+</section>
+
+<script lang="ts" client:load>
+  import type { Device } from '../types/Device';
+
+  // Parse the JSON-serialized devices into a local state array
+  let devices: Device[] = JSON.parse( Astro.props.devicesJSON || '[]' );
+
+  // Grab the <tbody> where we'll render device rows
+  const tbody = document.getElementById('infraTbody');
+
+  // Basic calculation function (replace with your real logic if needed)
+  // For example: GB/day = (eps * quantity * 86400 * eventSizeKB) / (1024*1024)
+  function computeGbPerDay(d: Device) {
+    const eventSizeKB = 0.5; // example average size
+    const dailyEvents = d.eps * 86400;
+    return (dailyEvents * eventSizeKB * d.quantity) / (1024 * 1024); 
+  }
+
+  function renderRows() {
+    if (!tbody) return;
+    // Clear existing rows
+    tbody.innerHTML = '';
+
+    devices.forEach((d, index) => {
+      // Recompute the gbPerDay each render
+      const gbDay = computeGbPerDay(d);
+      d.gbPerDay = parseFloat(gbDay.toFixed(2));
+
+      // Create a table row
+      const tr = document.createElement('tr');
+
+      // 1. Device name cell
+      const nameTd = document.createElement('td');
+      nameTd.textContent = d.name;
+      nameTd.className = 'py-2 px-3';
+
+      // 2. Quantity input
+      const quantityTd = document.createElement('td');
+      quantityTd.className = 'py-2 px-3';
+      const quantityInput = document.createElement('input');
+      quantityInput.type = 'number';
+      quantityInput.min = '0';
+      quantityInput.value = d.quantity.toString();
+      quantityInput.className = 'border w-16 px-1';
+      quantityInput.addEventListener('change', () => {
+        d.quantity = parseInt(quantityInput.value) || 0;
+        renderRows();
+      });
+      quantityTd.appendChild(quantityInput);
+
+      // 3. EPS input
+      const epsTd = document.createElement('td');
+      epsTd.className = 'py-2 px-3';
+      const epsInput = document.createElement('input');
+      epsInput.type = 'number';
+      epsInput.min = '0';
+      epsInput.step = '0.1';
+      epsInput.value = d.eps.toString();
+      epsInput.className = 'border w-16 px-1';
+      epsInput.addEventListener('change', () => {
+        d.eps = parseFloat(epsInput.value) || 0;
+        renderRows();
+      });
+      epsTd.appendChild(epsInput);
+
+      // 4. GB/day cell
+      const gbTd = document.createElement('td');
+      gbTd.textContent = d.gbPerDay.toFixed(2);
+      gbTd.className = 'py-2 px-3';
+
+      // Append cells to the row
+      tr.appendChild(nameTd);
+      tr.appendChild(quantityTd);
+      tr.appendChild(epsTd);
+      tr.appendChild(gbTd);
+
+      tbody.appendChild(tr);
+    });
+  }
+
+  // Initial render
+  renderRows();
+</script>

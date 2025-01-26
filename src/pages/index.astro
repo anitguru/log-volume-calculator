@@ -1,52 +1,12 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
+import Infrastructure from '../components/Infrastructure.astro';
 ---
 
 <BaseLayout>
   <h1 class="text-2xl font-bold mb-4">Log Volume Calculator</h1>
+  <!-- Just a placeholder for other sections or disclaimers -->
 
-  <form id="calculatorForm" class="space-y-4 w-full max-w-sm">
-    <label class="block">
-      Number of Devices
-      <input
-        id="deviceCount"
-        name="deviceCount"
-        type="number"
-        value="10"
-        min="1"
-        class="mt-1 block w-full rounded border border-gray-300 p-2"
-        required
-      />
-    </label>
-
-    <button
-      type="submit"
-      class="px-4 py-2 rounded bg-blue-600 text-white hover:bg-blue-700"
-    >
-      Calculate
-    </button>
-  </form>
-
-  <div id="results" class="mt-6 text-gray-900"></div>
-
-  <!-- Client-side TS script, referencing the external module -->
-  <script lang="ts" client:load>
-    import { calculateLogs } from '../scripts/calculatorLogic';
-
-    const form = document.getElementById('calculatorForm') as HTMLFormElement;
-    const resultsDiv = document.getElementById('results') as HTMLDivElement;
-
-    form.addEventListener('submit', (event) => {
-      event.preventDefault();
-      const deviceCountInput = document.getElementById('deviceCount') as HTMLInputElement;
-      const deviceCount = parseInt(deviceCountInput.value, 10) || 0;
-
-      const { eps, dailyGB } = calculateLogs({ deviceCount });
-
-      resultsDiv.innerHTML = `
-        <p><strong>Events per Second (EPS):</strong> ${eps}</p>
-        <p><strong>Estimated GB/day:</strong> ${dailyGB.toFixed(2)}</p>
-      `;
-    });
-  </script>
+  <!-- Infrastructure Section -->
+  <Infrastructure />
 </BaseLayout>
