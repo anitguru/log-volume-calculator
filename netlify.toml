@@ -1,5 +1,5 @@
 [[redirects]]
   from = "/*"
   to = "https://sdl-sizing-calc.netlify.app/:splat"
-  status = 200
+  status = 302
   force = true
