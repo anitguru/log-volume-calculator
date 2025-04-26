@@ -1,5 +1,5 @@
 [[redirects]]
-  from = "https://logsize.app/*"
+  from = "/*"
   to = "https://sdl-sizing-calc.netlify.app/:splat"
-  status = 302
+  status = 200
   force = true
